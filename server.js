@@ -24,43 +24,47 @@ mongoose
         console.log("Database Connected!");
     });
 
+// morgan('tiny');
 
-app.get('/', function (req, res) {
-    axios   
+// Make a home route
+app.get('/', (req, res) => {
+    db.Article
+        .find()
+        .populate("comments")
+        .then(dbArticles => res.render("home", { articles: dbArticles }))
+});
+
+app.get('/scrape', (req, res) => {
+    axios
         .get("https://www.outsideonline.com/")
         .then(response => {
-            res.send(response.data)
             const $ = cheerio.load(response.data);
-            $("article.latest__article").each(function(i, element) {
+            $("article.latest__article").each(function (i, element) {
                 let link = "https://www.outsideonline.com" + $(element).find("a").attr("href");
                 let title = $(element).find("a").find($("div.latest__article-text")).find("h2").text();
                 let summary = $(element).find("a").find($("div.latest__article-text")).find("div").find("p").text();
-                
-                console.log(title);
-                console.log(summary);
-                console.log(link);
+
+                // console.log(title);
+                // console.log(summary);
+                // console.log(link);
 
                 let postObj = {
                     link: link,
                     title: title,
                     summary: summary
                 };
+
                 db.Article
                     .create(postObj)
-                    .then(dbArticle => console.log(dbArticle))
-                    // .then(res.send('Scraped data from outsideonline.com'))
+                    .then(dbArticles => console.log(dbArticles))
                     .catch(err => console.log(err));
-                
             })
-            res.send('Scraped data from outsideonline.com')
-
+            res.send("Scraped the data!");
         })
-        // .then(() => {
-        //   res.send('Scraped data from outsideonline.com')  
-        // })
-
-    
 })
+
+// create the POST route for adding a comment 
+// app.post("/api/:articleId/comment")
 
 app.listen(PORT, () => console.log(`App is on http://localhost:${PORT}`));
 
