@@ -34,8 +34,11 @@ app.get('/', function (req, res) {
             $("article.latest__article").each(function(i, element) {
                 let link = "https://www.outsideonline.com" + $(element).find("a").attr("href");
                 let title = $(element).find("a").find($("div.latest__article-text")).find("h2").text();
-                console.log(link);
+                let summary = $(element).find("a").find($("div.latest__article-text")).find("div").find("p").text();
+
                 console.log(title);
+                console.log(summary);
+                console.log(link);
                 
                 // let postObj = {
                 //     link: link,
