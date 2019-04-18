@@ -4,6 +4,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 const mongoose = require("mongoose");
 const db = require("./models");
+const morgan = require("morgan");
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -23,8 +24,37 @@ mongoose
         console.log("Database Connected!");
     });
 
+
 app.get('/', function (req, res) {
-    res.send('Hello Amber')
+    axios   
+        .get("https://www.outsideonline.com/")
+        .then(response => {
+            res.send(response.data)
+            const $ = cheerio.load(response.data);
+            $("article.latest__article").each(function(i, element) {
+                let link = "https://www.outsideonline.com" + $(element).find("a").attr("href");
+                let title = $(element).find("a").find($("div.latest__article-text")).find("h2").text();
+                console.log(link);
+                console.log(title);
+                
+                // let postObj = {
+                //     link: link,
+                //     title: title,
+                //     summary: summary
+                // };
+                // db.Article
+                //     .create(postObj)
+                //     .then(dbArticle => console.log(dbArticle))
+                //     .catch(err => console.log(err));
+                
+            })
+        })
+        // .then(() => {
+        //   res.send('Scraped data from outsideonline.com')  
+        // })
+
+    
 })
 
 app.listen(PORT, () => console.log(`App is on http://localhost:${PORT}`));
+
