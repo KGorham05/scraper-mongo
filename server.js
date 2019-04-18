@@ -16,7 +16,7 @@ app.use(express.static("public"));
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scarperData";
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scraperData";
 
 mongoose
     .connect(MONGODB_URI, { useNewUrlParser: true }, (err) => {
@@ -35,22 +35,25 @@ app.get('/', function (req, res) {
                 let link = "https://www.outsideonline.com" + $(element).find("a").attr("href");
                 let title = $(element).find("a").find($("div.latest__article-text")).find("h2").text();
                 let summary = $(element).find("a").find($("div.latest__article-text")).find("div").find("p").text();
-
+                
                 console.log(title);
                 console.log(summary);
                 console.log(link);
-                
-                // let postObj = {
-                //     link: link,
-                //     title: title,
-                //     summary: summary
-                // };
-                // db.Article
-                //     .create(postObj)
-                //     .then(dbArticle => console.log(dbArticle))
-                //     .catch(err => console.log(err));
+
+                let postObj = {
+                    link: link,
+                    title: title,
+                    summary: summary
+                };
+                db.Article
+                    .create(postObj)
+                    .then(dbArticle => console.log(dbArticle))
+                    // .then(res.send('Scraped data from outsideonline.com'))
+                    .catch(err => console.log(err));
                 
             })
+            res.send('Scraped data from outsideonline.com')
+
         })
         // .then(() => {
         //   res.send('Scraped data from outsideonline.com')  
