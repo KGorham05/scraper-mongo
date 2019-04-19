@@ -8,7 +8,7 @@ $(".delete-comment-btn").click(function(e) {
         url: `/api/${commentId}/delete`,
         method: "DELETE"
     }).then(() => {
-        location.reload();
+        location.href("/");
     })
 })
 

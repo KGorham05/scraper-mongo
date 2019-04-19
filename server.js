@@ -59,7 +59,7 @@ app.get('/scrape', (req, res) => {
                     .then(dbArticles => console.log(dbArticles))
                     .catch(err => console.log(err));
             })
-            res.send("Scraped the data!");
+            res.redirect("/");
         })
 });
 
@@ -79,7 +79,7 @@ app.delete("/api/:commentId/delete", (req, res) => {
     db.Comment
         .deleteOne({_id: req.params.commentId})
         .then(() => res.redirect("/"))
-        .catch(err => res.json(err));
+        .catch(err => res.json(err))
 });
 
 app.listen(PORT, () => console.log(`App is on http://localhost:${PORT}`));
