@@ -61,10 +61,26 @@ app.get('/scrape', (req, res) => {
             })
             res.send("Scraped the data!");
         })
-})
+});
 
 // create the POST route for adding a comment 
-// app.post("/api/:articleId/comment")
+app.post("/api/:articleId/comment", (req, res) => {
+    db.Comment
+        .create({body: req.body.body})
+        .then(dbComment => {
+            return db.Article.findOneAndUpdate({_id: req.params.articleId}, {$push: { comments: dbComment._id}}, {new: true})
+        })
+        .then(() => res.redirect("/"))
+        .catch(err => res.json(err));
+});
+
+// create the DELETE route for deleting a comment
+app.delete("/api/:commentId/delete", (req, res) => {
+    db.Comment
+        .deleteOne({_id: req.params.commentId})
+        .then(() => res.redirect("/"))
+        .catch(err => res.json(err));
+});
 
 app.listen(PORT, () => console.log(`App is on http://localhost:${PORT}`));
 

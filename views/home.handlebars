@@ -1,30 +1,36 @@
-
 <div class="jumbotron">
   <div class="text-center">
     <h1 class="display-4">
-        Get the latest outdoor news!
+      Get the latest outdoor news!
     </h1>
-    <a class="btn btn-primary btn-lg" style="position: relative;top:20px" href="/scrape" role="button">Scrape the newest articles!</a>
+    <a class="btn btn-primary btn-lg" style="position: relative;top:20px" href="/scrape" role="button">Scrape the newest
+      articles!</a>
   </div>
 </div>
 
 <h2 class="text-center">New Articles</h2>
 
 <div class="article-div">
-    {{#each articles}}
-    <hr />
-    <h3>{{this.title}}</h3>
-    <p>{{this.summary}}</p>
-    <a href={{this.link}}>Go To Article</a>
-    <h5>Article comments</h5>
-    {{#each this.comments}}
-        <p>{{this.body}}</p>
-        <small>{{this.createdDate}}</small>
-    {{/each}}
-    <form action="/api/{{this._id}}/comment" method="POST">
+  {{#each articles}}
+  <hr />
+  <h3>{{this.title}}</h3>
+  <p>{{this.summary}}</p>
+  <a href={{this.link}}>Go To Article</a>
+  <h5>Article comments</h5>
+  {{#each this.comments}}
+  <p><strong>{{this.body}}</strong></p>
+  <small>{{this.createdDate}}</small>
+  <button type="submit" data-mongoId="{{this._id}}" class="delete-comment-btn btn btn-danger btn-sml">Delete Comment</button>
+  {{/each}}
+  <div class="container">
+    <div class="row">
+      <form style="position:relative; top: 20px;" action="/api/{{this._id}}/comment" method="POST">
         <textarea name="body"></textarea>
-        <button class="btn btn-success" type="submit">Add Comment</button>
-    </form>
-    <hr />
-{{/each}}
+        <button style="position:relative; bottom: 20px;" class="btn btn-success" type="submit">Add Comment</button>
+      </form>
+    </div>
+  </div>
+
+  <hr />
+  {{/each}}
 </div>
