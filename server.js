@@ -78,7 +78,7 @@ app.post("/api/:articleId/comment", (req, res) => {
 app.delete("/api/:commentId/delete", (req, res) => {
     db.Comment
         .deleteOne({_id: req.params.commentId})
-        .then(() => res.redirect("/"))
+        .then(data => res.json(data))
         .catch(err => res.json(err))
 });
 
